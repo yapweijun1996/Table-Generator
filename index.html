@@ -1,0 +1,89 @@
+<style>
+	.tb_style{table-layout:fixed;}
+	.tb_style > tbody > tr > td{box-sizing:border-box;}
+</style>
+<div>
+	<div style="font-family: monospace; white-space: pre-wrap; background-color: #f5f5f5; padding: 10px; border: 1px solid #ddd;">
+.tb_style{table-layout:fixed;}
+.tb_style > tbody > tr > td{box-sizing:border-box;}
+	</div>
+	<table cellpadding="0" cellspacing="0" style="width:100%;" class="tb_style" border="0">
+		<tr>
+			<td style="width:80px;">Rows :</td>
+			<td style="width:100px;"><input type="number" id="rows" placeholder="Enter number of rows"></td>
+			<td style="width:100%;"></td>
+		</tr>
+		<tr style="height:10px;"></tr>
+		<tr>
+			<td style="width:80px;">Columns :</td>
+			<td style="width:100px;"><input type="number" id="cols" placeholder="Enter number of columns"></td>
+			<td style="width:100%;"></td>
+		</tr>
+		<tr style="height:10px;"></tr>
+	</table>
+	<table cellpadding="0" cellspacing="0" style="width:100%;" class="tb_style" border="0">
+		<tr>
+			<td style="width:100px;"><button onclick="generate_table_code();">Generate Table</button></td>
+			<td style="width:10px;"></td>
+			<td style="width:100px;"><button onclick="copy_table_code();">Copy Table HTML</button></td>
+			<td style="width:100%;"></td>
+		</tr>
+	</table>
+</div>
+
+<div>
+	<div id="tableContainer">
+		
+	</div>
+</div>
+
+<script>
+	function generate_table_code(){
+		
+		var rows = document.getElementById('rows').value;
+		var cols = document.getElementById('cols').value;
+		
+		var tableContainer = document.getElementById('tableContainer');
+		tableContainer.innerHTML = "";
+		
+		var table = document.createElement('table');
+		
+		table.setAttribute('cellpadding', '0');
+		table.setAttribute('cellspacing', '0');
+		table.setAttribute('style', 'width:100%;table-layout:fixed;');
+		table.setAttribute('border', '0');
+		
+		for (var i = 0; i < rows; i++) {
+			var tr = document.createElement('tr');
+			
+			for (var j = 0; j < cols; j++) {
+				var td = document.createElement('td');
+				td.setAttribute('style', 'box-sizing:border-box;');
+				td.textContent = 'Row_' + (i + 1) + '_Col_' + (j + 1);
+				tr.appendChild(td);
+			}
+			table.appendChild(tr);
+		}
+		tableContainer.appendChild(table);
+		copy_table_code();
+	}
+	
+	
+	function copy_table_code(){
+		var table_code_data = document.getElementById('tableContainer').innerHTML;
+		table_code_data = formatHTML(table_code_data);
+		
+		const el = document.createElement('textarea');
+		el.value = table_code_data;
+		document.body.appendChild(el);
+		el.select();
+		document.execCommand('copy');
+		document.body.removeChild(el);
+		console.log('HTML copied to clipboard!');
+	}
+	
+	function formatHTML(input) {
+		return input.replace(/></g, ">\n<");
+	}
+</script>
+
