@@ -1,89 +1,243 @@
-<style>
-	.tb_style{table-layout:fixed;}
-	.tb_style > tbody > tr > td{box-sizing:border-box;}
-</style>
-<div>
-	<div style="font-family: monospace; white-space: pre-wrap; background-color: #f5f5f5; padding: 10px; border: 1px solid #ddd;">
-.tb_style{table-layout:fixed;}
-.tb_style > tbody > tr > td{box-sizing:border-box;}
-	</div>
-	<table cellpadding="0" cellspacing="0" style="width:100%;" class="tb_style" border="0">
-		<tr>
-			<td style="width:80px;">Rows :</td>
-			<td style="width:100px;"><input type="number" id="rows" placeholder="Enter number of rows"></td>
-			<td style="width:100%;"></td>
-		</tr>
-		<tr style="height:10px;"></tr>
-		<tr>
-			<td style="width:80px;">Columns :</td>
-			<td style="width:100px;"><input type="number" id="cols" placeholder="Enter number of columns"></td>
-			<td style="width:100%;"></td>
-		</tr>
-		<tr style="height:10px;"></tr>
-	</table>
-	<table cellpadding="0" cellspacing="0" style="width:100%;" class="tb_style" border="0">
-		<tr>
-			<td style="width:100px;"><button onclick="generate_table_code();">Generate Table</button></td>
-			<td style="width:10px;"></td>
-			<td style="width:100px;"><button onclick="copy_table_code();">Copy Table HTML</button></td>
-			<td style="width:100%;"></td>
-		</tr>
-	</table>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Table Generator</title>
+		
+		 <!-- SEO Meta Tags -->
+		<meta name="description" content="Create responsive tables instantly using our online table generator. Generate and copy HTML code effortlessly for your web projects." />
+		<meta name="keywords" content="table generator, HTML table, responsive table, online tool, free table generator" />
+		<meta name="robots" content="index, follow" />
+		<meta name="author" content="yapweijun1996" />
+		<link rel="canonical" href="https://yapweijun1996.github.io/Table-Generator/" />
 
-<div>
-	<div id="tableContainer">
-		
-	</div>
-</div>
+		<!-- Open Graph / Facebook -->
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="Responsive Table Generator | Free Online Tool" />
+		<meta property="og:description" content="Create responsive tables instantly using our online table generator. Generate and copy HTML code effortlessly for your web projects." />
+		<meta property="og:url" content="https://yapweijun1996.github.io/Table-Generator/" />
+		<meta property="og:image" content="https://yapweijun1996.github.io/Table-Generator/og_img.jpg">
 
-<script>
-	function generate_table_code(){
+		<!-- Twitter -->
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:title" content="Responsive Table Generator | Free Online Tool" />
+		<meta name="twitter:description" content="Create responsive tables instantly using our online table generator. Generate and copy HTML code effortlessly for your web projects." />
 		
-		var rows = document.getElementById('rows').value;
-		var cols = document.getElementById('cols').value;
-		
-		var tableContainer = document.getElementById('tableContainer');
-		tableContainer.innerHTML = "";
-		
-		var table = document.createElement('table');
-		
-		table.setAttribute('cellpadding', '0');
-		table.setAttribute('cellspacing', '0');
-		table.setAttribute('style', 'width:100%;table-layout:fixed;');
-		table.setAttribute('border', '0');
-		
-		for (var i = 0; i < rows; i++) {
-			var tr = document.createElement('tr');
-			
-			for (var j = 0; j < cols; j++) {
-				var td = document.createElement('td');
-				td.setAttribute('style', 'box-sizing:border-box;');
-				td.textContent = 'Row_' + (i + 1) + '_Col_' + (j + 1);
-				tr.appendChild(td);
+	
+		<style>
+			/* Base styles */
+			body {
+				font-family: Arial, sans-serif;
+				margin: 0px;
+				padding: 0px;
+				background: #f9f9f9;
+				color: #333;
 			}
-			table.appendChild(tr);
-		}
-		tableContainer.appendChild(table);
-		copy_table_code();
-	}
-	
-	
-	function copy_table_code(){
-		var table_code_data = document.getElementById('tableContainer').innerHTML;
-		table_code_data = formatHTML(table_code_data);
+			h1 {
+				text-align: center;
+			}
+			/* Responsive table styling */
+			.tb_style {
+				table-layout: fixed;
+				width: 100%;
+				border-collapse: collapse;
+			}
+			.tb_style td {
+				box-sizing: border-box;
+				border: 1px solid #ddd;
+				padding: 8px;
+				text-align: center;
+			}
+			/* Input fields styling */
+			.input-group {
+				margin-bottom: 15px;
+			}
+			.input-group label {
+				font-weight: bold;
+				display: block;
+				margin-bottom: 5px;
+			}
+			.input-group input {
+				width: 100%;
+				padding: 10px;
+				box-sizing: border-box;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+			}
+			/* Button styling */
+			.button-group {
+				display: flex;
+				gap: 10px;
+				flex-wrap: wrap;
+				margin-bottom: 15px;
+			}
+			.button-group button {
+				flex: 1;
+				padding: 10px;
+				border: none;
+				background: #007bff;
+				color: #fff;
+				border-radius: 4px;
+				font-size: 16px;
+				cursor: pointer;
+			}
+			.button-group button:hover {
+				background: #0056b3;
+			}
+			/* Table container */
+			#tableContainer {
+				margin-top: 20px;
+			}
+			/* Toast notification styling */
+			.toast {
+				position: fixed;
+				top: 15px;
+				right: 10px;
+				background-color: rgba(0, 0, 0, 0.8);
+				color: #fff;
+				padding: 10px 20px;
+				border-radius: 4px;
+				opacity: 0;
+				transition: opacity 0.5s ease, bottom 0.5s ease;
+				z-index: 9999;
+			}
+			.toast.show {
+				opacity: 1;
+			}
+			/* Mobile responsiveness */
+			@media (max-width: 600px) {
+				.button-group button {
+					font-size: 14px;
+				}
+				.input-group input {
+					font-size: 14px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Table Generator</h1>
+		<div style="max-width:500px; margin: 0 auto;">
 		
-		const el = document.createElement('textarea');
-		el.value = table_code_data;
-		document.body.appendChild(el);
-		el.select();
-		document.execCommand('copy');
-		document.body.removeChild(el);
-		console.log('HTML copied to clipboard!');
-	}
-	
-	function formatHTML(input) {
-		return input.replace(/></g, ">\n<");
-	}
-</script>
-
+			<div style="margin-bottom: 20px; font-family: monospace; white-space: pre-line; background-color: #f5f5f5; padding: 10px; border: 1px solid #ddd;">.tb_style{table-layout:fixed;}
+				.tb_style > tbody > tr > td{box-sizing:border-box;}
+			</div>
+		
+			<!-- Input Fields -->
+			<div class="input-group">
+				<label for="rows">Rows:</label>
+				<input type="number" value="2" id="rows" placeholder="Enter number of rows" />
+			</div>
+			<div class="input-group">
+				<label for="cols">Columns:</label>
+				<input type="number" value="2" id="cols" placeholder="Enter number of columns" />
+			</div>
+			<!-- Buttons -->
+			<div class="button-group">
+				<button id="generateBtn">Generate Table</button>
+				<button id="copyBtn">Copy Table HTML</button>
+			</div>
+			<!-- Generated Table Container -->
+			<div id="tableContainer"></div>
+		</div>
+		
+		<!-- Toast Notification -->
+		<div id="toast" class="toast"></div>
+		
+		<!-- Footer [start]  -->
+		<footer style="position: fixed; bottom: 0; width: 100%; background-color: #333; color: #fff; text-align: center; padding: 25px 10px;">
+			By
+			<a href="https://github.com/yapweijun1996" style="color: #007bff; text-decoration: underline; font-weight: 600;" target="_blank">yapweijun1996</a>
+			@ <span id="currentYear"></span>
+		</footer>
+		<script>
+			document.getElementById('currentYear').textContent = new Date().getFullYear();
+		</script>
+		<!-- Footer [end  ]  -->
+		<script>
+			// Toast notification function
+			function showToast(message) {
+				const toast = document.getElementById("toast");
+				toast.textContent = message;
+				toast.classList.add("show");
+				setTimeout(() => {
+					toast.classList.remove("show");
+				}, 3000);
+			}
+			
+			// Event listeners for buttons
+			document
+			.getElementById("generateBtn")
+			.addEventListener("click", generate_table_code);
+			document
+			.getElementById("copyBtn")
+			.addEventListener("click", copyTableCode);
+			
+			function generate_table_code(){
+				
+				var rows = document.getElementById('rows').value;
+				var cols = document.getElementById('cols').value;
+				
+				var tableContainer = document.getElementById('tableContainer');
+				tableContainer.innerHTML = "";
+				
+				var table = document.createElement('table');
+				
+				table.setAttribute('cellpadding', '0');
+				table.setAttribute('cellspacing', '0');
+				table.setAttribute('style', 'width:100%;table-layout:fixed;');
+				table.setAttribute('border', '0');
+				
+				for (var i = 0; i < rows; i++) {
+					var tr = document.createElement('tr');
+					
+					for (var j = 0; j < cols; j++) {
+						var td = document.createElement('td');
+						td.setAttribute('style', 'box-sizing:border-box;');
+						td.textContent = 'Row_' + (i + 1) + '_Col_' + (j + 1);
+						tr.appendChild(td);
+					}
+					table.appendChild(tr);
+				}
+				tableContainer.appendChild(table);
+				copyTableCode();
+			}
+			
+			// Function to copy the generated table HTML to clipboard
+			function copyTableCode() {
+				const tableContainer = document.getElementById("tableContainer");
+				let tableHtml = tableContainer.innerHTML;
+				tableHtml = formatHTML(tableHtml);
+				
+				if (navigator.clipboard && window.isSecureContext) {
+					navigator.clipboard
+					.writeText(tableHtml)
+					.then(() => {
+						showToast("HTML copied to clipboard!");
+					})
+					.catch(() => {
+						showToast("Failed to copy HTML.");
+					});
+				} else {
+					const el = document.createElement("textarea");
+					el.value = tableHtml;
+					document.body.appendChild(el);
+					el.select();
+					try {
+						document.execCommand("copy");
+						showToast("HTML copied to clipboard!");
+					} catch (err) {
+						showToast("Failed to copy HTML.");
+					}
+					document.body.removeChild(el);
+				}
+			}
+			
+			// Function to format HTML string with newlines for readability
+			function formatHTML(input) {
+				return input.replace(/></g, ">\n<");
+			}
+		</script>
+	</body>
+</html>
